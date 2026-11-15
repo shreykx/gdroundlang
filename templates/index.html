@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gdroundlang</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/js/script.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body>
+    <nav style="display: flex; flex-direction: row; justify-content: space-between; padding: 0px 10px; align-items: center;">
+        <h1 class="love-ya-like-a-sister-regular" style="color: #FFFFFF; font-weight: bolder; font-size: 40px;">GDROUNDLANG</h1>
+        <div class="">
+            <div class="hex-border">
+                <button id="help" type="button" style="font-size: 20px;">HELP</button>
+            </div>
+        </div>
+    </nav>
+    <div style="display: flex; flex-direction: row; justify-content: space-between;">
+    <div style="color: white; width: 33%; padding: 0px 5px 0px 0px;">
+            <ul>
+                <li><p>Click on the <span style="background-color: gold; color: white">start game (A)</span> button to make a new score!</p></li>
+                <li><p>Press the arrow keys on screen, or on your keyboard to move the player. Interact with npcs to play the game.</p></li>
+            </ul>
+    </div>
+    <div id="canvas-holder">
+        <canvas id="game-canvas">
+
+        </canvas>
+    </div>
+    <div style="color: white; width: 33%">
+        <ul style="list-style-type:circle;" id="imp-links">
+            <li><a>How does it work?</a></li>
+        </ul>
+    </div>
+    </div>
+
+    <div style="margin-top: 20px; display: flex; flex-direction: row; justify-content: center; align-items: center;">
+        <div style="min-width: 350px; padding: 10px 20px; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+            <div id="joycontrol-holder">
+                <button class="up">▲</button>
+                <div class="horizontal">
+                    <button class="left">◀</button>
+                    <button class="down">▼</button>
+                    <button class="right">▶</button>
+                </div>
+            </div>
+            <div id="face-buttons">
+                <button class="x">X</button>
+                <button class="y">Y</button>
+                <button class="a">A</button>
+                <button class="b">B</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
