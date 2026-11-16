@@ -5,8 +5,15 @@ function gdroundlang() {
         player : {
             x: 100,
             y: 100,
-            speed: 3
+            speed: 2
         },
+        staticBodies : [
+            { x: 0, y: 0, width: 800, height: 10, color: "blueviolet", ref: "The wall at top"},
+            { x: 0, y: 150, width: 800, height: 10, color: "blueviolet", ref: "The bottom boundary collider"},
+            { x: 300, y: 0, width: 10, height: 800, color: "blueviolet", ref: "The right boundary collider"},
+            { x: -10, y: 0, width: 10, height: 800, color: "blueviolet", ref: "The left boundary collider"},
+
+        ],
         keys: {},
         init () {
             this.canvas = this.$refs.game
@@ -27,10 +34,25 @@ function gdroundlang() {
             requestAnimationFrame(() => this.gameLoop())
         },
         update () {
+            let oldY = this.player.y;
+
+
+            // vertical movement
             if (this.keys["w"]) this.player.y -= this.player.speed;
             if (this.keys["s"]) this.player.y += this.player.speed;
+            if (this.staticBodies.some(b => this.checkCollision(this.player, b))) {
+                this.player.y = oldY;
+            }
+
+            let oldX = this.player.x;
+            // horizontal movement
             if (this.keys["a"]) this.player.x -= this.player.speed;
             if (this.keys["d"]) this.player.x += this.player.speed;
+            if (this.staticBodies.some(b => this.checkCollision(this.player, b))) {
+                this.player.x = oldX;
+            }
+
+
             if (this.keys["x"]) {
                 // X button action
             }
@@ -46,8 +68,16 @@ function gdroundlang() {
         },
         draw () {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-            this.ctx.fillStyle = "bluevioley";
-            this.ctx.fillRect(this.player.x, this.player.y, 40, 40)
+            this.ctx.fillStyle = "black";
+            this.ctx.fillRect(this.player.x, this.player.y, 20, 20)
+            this.staticBodies.forEach(body => {
+                if (body.img?.complete && body.img.naturalWidth > 0) {
+                    this.ctx.drawImage(body.img, body.x, body.y, body.width, body.height);
+                } else {
+                    this.ctx.fillStyle = body.color || "gray";
+                    this.ctx.fillRect(body.x, body.y, body.width, body.height);
+                }
+            });
         },
         press(key) {
             this.keys[key] = true;
@@ -56,5 +86,13 @@ function gdroundlang() {
         release(key) {
             this.keys[key] = false;
         },
+        checkCollision(a, b) {
+            return (
+                a.x < b.x + b.width &&
+                a.x + 20 > b.x &&
+                a.y < b.y + b.height &&
+                a.y + 20 > b.y
+            )
+        }
     }
 }
