@@ -8,7 +8,7 @@
     <script src="/static/js/script.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body>
+<body x-data="gdroundlang()" x-init="init()">
     <nav style="display: flex; flex-direction: row; justify-content: space-between; padding: 0px 10px; align-items: center;">
         <h1 class="love-ya-like-a-sister-regular" style="color: #FFFFFF; font-weight: bolder; font-size: 40px;">GDROUNDLANG</h1>
         <div class="">
@@ -49,11 +49,11 @@
             <div id="face-buttons">
                 <button class="x" @pointerdown="press('x')" @pointerup="release('x')" @pointerleave="release('x')">X</button>
                 <button class="y" @pointerdown="press('y')" @pointerup="release('y')" @pointerleave="release('y')">Y</button>
-                <button class="a" @pointerdown="press('a')" @pointerup="release('a')" @pointerleave="release('a')">A</button>
+                <button class="a" @pointerdown="press('button_a')" @pointerup="release('button_a')" @pointerleave="release('button_a')">A</button>
                 <button class="b" @pointerdown="press('b')" @pointerup="release('b')" @pointerleave="release('b')">B</button>
             </div>
         </div>
     </div>
-
+    <div class="grain" style="scale: 1.2;"></div>
 </body>
 </html>

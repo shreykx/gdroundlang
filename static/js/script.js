@@ -34,7 +34,7 @@ function gdroundlang() {
             if (this.keys["x"]) {
                 // X button action
             }
-            if (this.keys["a"]) {
+            if (this.keys["button_a"]) {
                 // A button action
             }
             if (this.keys["b"]) {
