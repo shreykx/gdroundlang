@@ -25,7 +25,7 @@
             </ul>
     </div>
     <div id="canvas-holder">
-        <canvas id="game-canvas">
+        <canvas id="game-canvas" x-ref="game">
 
         </canvas>
     </div>
@@ -39,18 +39,18 @@
     <div style="margin-top: 20px; display: flex; flex-direction: row; justify-content: center; align-items: center;">
         <div style="min-width: 350px; padding: 10px 20px; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
             <div id="joycontrol-holder">
-                <button class="up">▲</button>
+                <button @pointerdown="press('w')" @pointerup="release('w')" @pointerleave="release('w')" @pointercancel="release('w')" class="up">▲</button>
                 <div class="horizontal">
-                    <button class="left">◀</button>
-                    <button class="down">▼</button>
-                    <button class="right">▶</button>
+                    <button class="left"  @pointerdown="press('a')" @pointerup="release('a')" @pointerleave="release('a')" @pointercancel="release('a')">◀</button>
+                    <button class="down" @pointerdown="press('s')" @pointerup="release('s')" @pointerleave="release('s')" @pointercancel="release('s')">▼</button>
+                    <button class="right"  @pointerdown="press('d')" @pointerup="release('d')" @pointerleave="release('d')" @pointercancel="release('d')">▶</button>
                 </div>
             </div>
             <div id="face-buttons">
-                <button class="x">X</button>
-                <button class="y">Y</button>
-                <button class="a">A</button>
-                <button class="b">B</button>
+                <button class="x" @pointerdown="press('x')" @pointerup="release('x')" @pointerleave="release('x')">X</button>
+                <button class="y" @pointerdown="press('y')" @pointerup="release('y')" @pointerleave="release('y')">Y</button>
+                <button class="a" @pointerdown="press('a')" @pointerup="release('a')" @pointerleave="release('a')">A</button>
+                <button class="b" @pointerdown="press('b')" @pointerup="release('b')" @pointerleave="release('b')">B</button>
             </div>
         </div>
     </div>

@@ -133,3 +133,9 @@ button {
 #face-buttons .y { grid-column: 1; grid-row: 2; }
 #face-buttons .a { grid-column: 3; grid-row: 2; }
 #face-buttons .b { grid-column: 2; grid-row: 3; }
+
+#joycontrol-holder button,
+#face-buttons button {
+    touch-action: none;
+    user-select: none;
+}
