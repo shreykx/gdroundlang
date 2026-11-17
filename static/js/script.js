@@ -6,7 +6,7 @@ function gdroundlang() {
             x: 100,
             y: 100,
             speed: 2,
-            framesPNG: 'character.png',
+            framesPNG: '/static/character.png',
             moving: false,
             dirRow: 0,
             frame: 0,
@@ -14,7 +14,7 @@ function gdroundlang() {
             img: null
         },
         staticBodies : [
-            { x: 0, y: 0, width: 800, height: 10, color: "blueviolet", ref: "The wall at top"},
+            { x: 0, y: 0, width: 800, height: 10, color: "blueviolet", ref: "The wall at top", sx: 369, sy: 13, sw: 23, sh: 23},
             { x: 0, y: 150, width: 800, height: 10, color: "blueviolet", ref: "The bottom boundary collider"},
             { x: 300, y: 0, width: 10, height: 800, color: "blueviolet", ref: "The right boundary collider"},
             { x: -10, y: 0, width: 10, height: 800, color: "blueviolet", ref: "The left boundary collider"},
@@ -25,8 +25,18 @@ function gdroundlang() {
             this.canvas = this.$refs.game
             this.ctx = this.canvas.getContext("2d")
 
+            // character.png (for the player)
+
             this.player.img = new Image()
             this.player.img.src = this.player.framesPNG
+
+            // overworld.png (for tiles and other setup props)
+
+            this.overworldImg = new Image()
+            this.overworldImg.src = '/static/Overworld.png'
+            this.staticBodies[0].img = this.overworldImg
+
+
 
             window.addEventListener("keydown", (e) => {
                 this.keys[e.key.toLowerCase()] = true
@@ -66,12 +76,12 @@ function gdroundlang() {
             // horizontal movement
             if (this.keys["a"]) {
                 this.player.x -= this.player.speed;
-                this.player.dirRow = 1
+                this.player.dirRow = 3
                 this.player.moving = true
             }
             if (this.keys["d"]) {
                 this.player.x += this.player.speed;
-                this.player.dirRow = 3;
+                this.player.dirRow = 1;
                 this.player.moving = true
             }
             if (this.staticBodies.some(b => this.checkCollision(this.player, b))) {
@@ -97,15 +107,20 @@ function gdroundlang() {
         },
         draw () {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+
+            if (this.overworldImg?.complete) this.drawTiledStatic(this.overworldImg, 68, 145, 42, 30, 0, 0, this.canvas.width, this.canvas.height)
             
-            // to be removed
-            this.ctx.fillStyle = "black";
-            this.ctx.fillRect(this.player.x, this.player.y, 20, 20)
-            //
+            const p = this.player
+            if (p.img.complete && p.img.naturalWidth > 0) {
+                this.ctx.drawImage(p.img, p.frame*16, p.dirRow*32, 16, 32, p.x, p.y, 16, 32)
+            } else {
+                this.ctx.fillStyle = "black"
+                this.ctx.fillRect(p.x, p.y, 16, 32)
+            }
 
             this.staticBodies.forEach(body => {
                 if (body.img?.complete && body.img.naturalWidth > 0) {
-                    this.ctx.drawImage(body.img, body.x, body.y, body.width, body.height);
+                    this.drawTiledStatic(body.img, body.sx, body.sy, body.sw, body.sh, body.x, body.y, body.width, body.height)
                 } else {
                     this.ctx.fillStyle = body.color || "gray";
                     this.ctx.fillRect(body.x, body.y, body.width, body.height);
@@ -135,6 +150,13 @@ function gdroundlang() {
         },
         drawTiles () {
 
+        },
+        drawTiledStatic(img, sx, sy, sw, sh, x, y, w, h) {
+            for (let ty = y; ty < y + h; ty += sh) {
+                for (let tx = x; tx < x + w; tx += sw) {
+                    this.ctx.drawImage(img, sx, sy, sw, sh, tx, ty, sw, sh)
+                }
+            }
         }
     }
 }
