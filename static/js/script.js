@@ -1,24 +1,34 @@
 function gdroundlang() {
     return {
+        logs: [
+            'loaded gameplay'
+        ],
         canvas: null,
         ctx: null,
         player : {
             x: 100,
             y: 100,
-            speed: 2,
+            speed: 1,
             framesPNG: '/static/character.png',
             moving: false,
             dirRow: 0,
             frame: 0,
             frameTimer: 0,
-            img: null
+            img: null,
+            w: 16,
+            h: 20,
         },
         staticBodies : [
-            { x: 0, y: 0, width: 800, height: 10, color: "blueviolet", ref: "The wall at top", sx: 369, sy: 13, sw: 23, sh: 23},
+            { x: 0, y: 0, width: 800, height: 20, color: "blueviolet", ref: "The wall at top", sx: 369, sy: 13, sw: 23, sh: 23},
             { x: 0, y: 150, width: 800, height: 10, color: "blueviolet", ref: "The bottom boundary collider"},
             { x: 300, y: 0, width: 10, height: 800, color: "blueviolet", ref: "The right boundary collider"},
             { x: -10, y: 0, width: 10, height: 800, color: "blueviolet", ref: "The left boundary collider"},
 
+        ],
+        npcs : [
+            {id: 'witch', x: 20, y: 22, intro: '', pass: [''], fail: [''], row: 0, width: 24, height: 24, frame: 0, frameTimer: 0 },
+            {id: 'golem', x: 125, y: 22, intro: '', pass: [''], fail: [''], row: 2, width: 24, height: 24, frame: 0, frameTimer: 0 },
+            {id: 'turtle', x: 270, y: 22, intro: '', pass: [''], fail: [''], row: 4, width: 24, height: 24, frame: 0, frameTimer: 0 }
         ],
         keys: {},
         init () {
@@ -35,9 +45,20 @@ function gdroundlang() {
             this.overworldImg = new Image()
             this.overworldImg.src = '/static/Overworld.png'
             this.staticBodies[0].img = this.overworldImg
+            
+            // cave.png
+            this.caveImg = new Image()
+            this.caveImg.src = '/static/cave.png'
 
 
+            // this.torchImg = new Image()
+            // this.torchImg.src = '/static/torch.png'
 
+            // npc.image frame sheet
+            this.npcImg = new Image()
+            this.npcImg.src = '/static/npcs.png'
+
+            
             window.addEventListener("keydown", (e) => {
                 this.keys[e.key.toLowerCase()] = true
             })
@@ -68,10 +89,11 @@ function gdroundlang() {
                 this.player.dirRow = 0; 
                 this.player.moving = true
             }
-            if (this.staticBodies.some(b => this.checkCollision(this.player, b))) {
-                this.player.y = oldY;
+            const hitY = this.staticBodies.concat(this.npcs).find(b => this.checkCollision(this.player, b))
+            if (hitY) {
+                this.player.y = oldY
+                this.log('bumped ' + (hitY.id || hitY.ref) + ' @ ' + Math.round(this.player.x) + ',' + Math.round(this.player.y))
             }
-
             let oldX = this.player.x;
             // horizontal movement
             if (this.keys["a"]) {
@@ -84,10 +106,11 @@ function gdroundlang() {
                 this.player.dirRow = 1;
                 this.player.moving = true
             }
-            if (this.staticBodies.some(b => this.checkCollision(this.player, b))) {
-                this.player.x = oldX;
+            const hitX = this.staticBodies.concat(this.npcs).find(b => this.checkCollision(this.player, b))
+            if (hitX) {
+                this.player.x = oldX
+                this.log('bumped ' + (hitX.id || hitX.ref) + ' @ ' + Math.round(this.player.x) + ',' + Math.round(this.player.y))
             }
-
 
             if (this.keys["x"]) {
                 // X button action
@@ -102,14 +125,17 @@ function gdroundlang() {
                 // Y button action
             }
 
-            if (this.player.moving) this.animate(this.player, 4, 10) 
+            this.npcs.forEach(n => this.animate(n, 8, 30))
+            if (this.player.moving) this.animate(this.player, 4, 10)
+            
             else this.player.frame = 0
         },
         draw () {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
-            if (this.overworldImg?.complete) this.drawTiledStatic(this.overworldImg, 68, 145, 42, 30, 0, 0, this.canvas.width, this.canvas.height)
-            
+            this.ctx.fillStyle = '#151017'
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
+                        
             const p = this.player
             if (p.img.complete && p.img.naturalWidth > 0) {
                 this.ctx.drawImage(p.img, p.frame*16, p.dirRow*32, 16, 32, p.x, p.y, 16, 32)
@@ -126,6 +152,11 @@ function gdroundlang() {
                     this.ctx.fillRect(body.x, body.y, body.width, body.height);
                 }
             });
+            if (this.npcImg?.complete && this.npcImg.naturalWidth > 0) {
+                this.npcs.forEach(n => {
+                    this.ctx.drawImage(this.npcImg, n.frame*128, n.row*128, 128, 128, n.x, n.y, 20, 20)
+                })
+            }
         },
         press(key) {
             this.keys[key] = true;
@@ -135,11 +166,13 @@ function gdroundlang() {
             this.keys[key] = false;
         },
         checkCollision(a, b) {
+            const left = a.x + (16 - a.w) / 2
+            const top = a.y + (32 - a.h) / 2
             return (
-                a.x < b.x + b.width &&
-                a.x + 20 > b.x &&
-                a.y < b.y + b.height &&
-                a.y + 20 > b.y
+                left < b.x + b.width &&
+                left + a.w > b.x &&
+                top < b.y + b.height &&
+                top + a.h > b.y
             )
         },
         animate(obj, n, ticks) {
@@ -157,6 +190,13 @@ function gdroundlang() {
                     this.ctx.drawImage(img, sx, sy, sw, sh, tx, ty, sw, sh)
                 }
             }
+        },
+        
+        log (msg) {
+            this.logs.push(msg)
+            this.$nextTick(() => {
+            this.$refs.loglist.scrollTop = this.$refs.loglist.scrollHeight
+        })
         }
     }
 }

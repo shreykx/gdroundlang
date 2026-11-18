@@ -196,3 +196,9 @@ button {
     scale: 1;
     transform: translateX(0px);
   }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar-button {
+    display: none;
+  }

@@ -24,43 +24,55 @@
         </div>
     </nav>
     <div style="display: flex; flex-direction: row; justify-content: space-between;">
-    <div style="color: white; width: 33%; padding: 0px 5px 0px 0px;">
+    <div style="color: white; width: 33%; padding: 0px 5px 0px 0px; overflow-y: auto;">
             <ul>
                 <li><p>Click on the <span style="background-color: gold; color: white">start game (A)</span> button to make a new score!</p></li>
                 <li><p>Press the arrow keys on screen, or on your keyboard to move the player. Interact with npcs to play the game.</p></li>
                 <li><p>Interacting with each npc prompts you with a question, answer it to gain more points!</p></li>
                 <li><p>Answer as many as you can in under <span style="background-color: gold; color: white;">5 minutes</span> to know your final score.</p></li>
             </ul>
+            <div style="display: flex; flex-direction: column; border: gold solid 2px; height: 300px; background-color: black;">
+                <div style="background-color: gold; padding: 0px 10px;">
+                    <h4 style="line-height: 0px;">console</h4>
+                </div>
+                <div x-ref="loglist" style="flex: 1; overflow-y: auto;" class="no-scrollbar">
+                    <ul style="list-style-type: '>>'; padding-left: 14px; overflow: scroll;" class="no-scrollbar">
+                        <template x-for="(log, index) in logs" :key="index">
+                            <li><p x-text="log"></p></li>
+                        </template>
+                    </ul>
+                </div>
+                
+            </div>
     </div>
-    <div id="canvas-holder">
+    <div id="canvas-holder" style="max-height: max-content;">
         <canvas id="game-canvas" x-ref="game">
 
         </canvas>
+        <div style="margin-top: 20px; display: flex; flex-direction: row; justify-content: center; align-items: center;">
+            <div style="min-width: 350px; padding: 10px 20px; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+                <div id="joycontrol-holder">
+                    <button @pointerdown="press('w')" @pointerup="release('w')" @pointerleave="release('w')" @pointercancel="release('w')" class="up">▲</button>
+                    <div class="horizontal">
+                        <button class="left"  @pointerdown="press('a')" @pointerup="release('a')" @pointerleave="release('a')" @pointercancel="release('a')">◀</button>
+                        <button class="down" @pointerdown="press('s')" @pointerup="release('s')" @pointerleave="release('s')" @pointercancel="release('s')">▼</button>
+                        <button class="right"  @pointerdown="press('d')" @pointerup="release('d')" @pointerleave="release('d')" @pointercancel="release('d')">▶</button>
+                    </div>
+                </div>
+                <div id="face-buttons">
+                    <button class="x" @pointerdown="press('x')" @pointerup="release('x')" @pointerleave="release('x')">X</button>
+                    <button class="y" @pointerdown="press('y')" @pointerup="release('y')" @pointerleave="release('y')">Y</button>
+                    <button class="a" @pointerdown="press('button_a')" @pointerup="release('button_a')" @pointerleave="release('button_a')">A</button>
+                    <button class="b" @pointerdown="press('b')" @pointerup="release('b')" @pointerleave="release('b')">B</button>
+                </div>
+            </div>
+        </div>
     </div>
     <div style="color: white; width: 33%">
         <ul style="list-style-type:circle;" id="imp-links">
             <li><a>How does it work?</a></li>
         </ul>
     </div>
-    </div>
-
-    <div style="margin-top: 20px; display: flex; flex-direction: row; justify-content: center; align-items: center;">
-        <div style="min-width: 350px; padding: 10px 20px; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
-            <div id="joycontrol-holder">
-                <button @pointerdown="press('w')" @pointerup="release('w')" @pointerleave="release('w')" @pointercancel="release('w')" class="up">▲</button>
-                <div class="horizontal">
-                    <button class="left"  @pointerdown="press('a')" @pointerup="release('a')" @pointerleave="release('a')" @pointercancel="release('a')">◀</button>
-                    <button class="down" @pointerdown="press('s')" @pointerup="release('s')" @pointerleave="release('s')" @pointercancel="release('s')">▼</button>
-                    <button class="right"  @pointerdown="press('d')" @pointerup="release('d')" @pointerleave="release('d')" @pointercancel="release('d')">▶</button>
-                </div>
-            </div>
-            <div id="face-buttons">
-                <button class="x" @pointerdown="press('x')" @pointerup="release('x')" @pointerleave="release('x')">X</button>
-                <button class="y" @pointerdown="press('y')" @pointerup="release('y')" @pointerleave="release('y')">Y</button>
-                <button class="a" @pointerdown="press('button_a')" @pointerup="release('button_a')" @pointerleave="release('button_a')">A</button>
-                <button class="b" @pointerdown="press('b')" @pointerup="release('b')" @pointerleave="release('b')">B</button>
-            </div>
-        </div>
     </div>
     <div class="grain" style="scale: 1.2;"></div>
 </body>
