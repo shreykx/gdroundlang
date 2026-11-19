@@ -17,6 +17,7 @@ function gdroundlang() {
             img: null,
             w: 16,
             h: 20,
+            score: 0
         },
         staticBodies : [
             { x: 0, y: 0, width: 800, height: 20, color: "blueviolet", ref: "The wall at top", sx: 369, sy: 13, sw: 23, sh: 23},
@@ -31,6 +32,19 @@ function gdroundlang() {
             {id: 'turtle', x: 270, y: 22, intro: '', pass: [''], fail: [''], row: 4, width: 24, height: 24, frame: 0, frameTimer: 0 }
         ],
         keys: {},
+        activeMsger: {
+            isVisible: true,
+            isWritingAreaVisible: true,
+            placeholderText: "answer me?",
+            text: null,
+            CTAs: [
+            ] // have dict shaped buttons
+        },
+        keywords: {
+            witch: ['potion', 'moon', 'spell', 'shadow', 'cauldron', 'curse', 'broom'],
+            golem: ['stone', 'mountain', 'iron', 'earth', 'crystal', 'weight', 'strength'],
+            turtle: ['shell', 'ocean', 'patience', 'tide', 'sand', 'island', 'time']
+        },
         init () {
             this.canvas = this.$refs.game
             this.ctx = this.canvas.getContext("2d")
@@ -60,12 +74,16 @@ function gdroundlang() {
 
             
             window.addEventListener("keydown", (e) => {
+                if (e.target.matches('input, textarea, [contenteditable]')) return
                 this.keys[e.key.toLowerCase()] = true
             })
             window.addEventListener("keyup", (e) => {
                 this.keys[e.key.toLowerCase()] = false;
             })
 
+            this.activeMsger.CTAs = [
+                { label: 'submit', action: () => this.log("we're finally here!") }
+            ]
             this.gameLoop()
         },
         gameLoop() {
@@ -93,6 +111,10 @@ function gdroundlang() {
             if (hitY) {
                 this.player.y = oldY
                 this.log('bumped ' + (hitY.id || hitY.ref) + ' @ ' + Math.round(this.player.x) + ',' + Math.round(this.player.y))
+                if (hitY.id) {
+                    this.activeMsger.text = hitY.intro
+                    this.activeMsger.isVisible = true
+                }
             }
             let oldX = this.player.x;
             // horizontal movement
@@ -197,6 +219,13 @@ function gdroundlang() {
             this.$nextTick(() => {
             this.$refs.loglist.scrollTop = this.$refs.loglist.scrollHeight
         })
+        },
+
+        getQuestion (character, prev) {
+            return
+        },
+        startRiddle (id, prev) {
+
         }
     }
 }

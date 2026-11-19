@@ -202,3 +202,19 @@ button {
   .no-scrollbar::-webkit-scrollbar-button {
     display: none;
   }
+
+  .msger-cta-btn {
+    text-transform: uppercase;
+    padding: 10px 20px;
+    font-size: large;
+    font-weight: bolder;
+    background-color: orange;
+    color: white;
+    border-radius: 5px;
+    transition: all;
+    transition-duration: 80ms;
+}
+.msger-cta-btn:active {
+    transform: scale(0.9);
+    opacity: 0.7;
+}
